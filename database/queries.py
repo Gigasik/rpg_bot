@@ -14,27 +14,7 @@ async def get_or_create_user(session: AsyncSession, user_id: int, username: str)
     # Проверяем существование персонажа ПЕРЕД добавлением
     char = await session.get(Character, user_id)
     if not char:
-        # Явно устанавливаем все значения по умолчанию
-        char = Character(
-            user_id=user_id,
-            level=1,
-            health=100,
-            strength=10,
-            armor=5,
-            experience=0,
-            gold=100
-        )
-        session.add(char)
-        await session.commit()
-    
-    # Проверяем, что все поля персонажа инициализированы
-    if char.strength is None:
-        char.strength = 10
-        session.add(char)
-        await session.commit()
-    
-    if char.armor is None:
-        char.armor = 5
+        char = Character(user_id=user_id)
         session.add(char)
         await session.commit()
     
@@ -43,14 +23,6 @@ async def get_or_create_user(session: AsyncSession, user_id: int, username: str)
 async def get_profile(session: AsyncSession, user_id: int):
     user = await session.get(User, user_id)
     char = await session.get(Character, user_id)
-    
-    # Если персонаж существует, но некоторые поля None, исправляем
-    if char and char.strength is None:
-        char.strength = 10
-        char.armor = 5
-        session.add(char)
-        await session.commit()
-    
     return user, char
 
 async def get_market_items(session: AsyncSession):

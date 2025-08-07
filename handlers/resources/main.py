@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from services.resources.core import ResourceService, CRAFTING_RECIPES
 from database.base import async_session
 from keyboards.resources import resources_keyboard, buildings_keyboard, crafting_keyboard

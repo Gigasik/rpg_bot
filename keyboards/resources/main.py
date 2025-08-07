@@ -1,4 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
+from services.resources.core import CRAFTING_RECIPES
 
 def resources_keyboard():
     return ReplyKeyboardMarkup(

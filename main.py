@@ -4,6 +4,7 @@ from aiogram import Bot, Dispatcher
 from config.settings import settings
 from database.base import init_db
 from handlers import start, profile, economy
+from handlers.battle import pve
 from handlers.resources import main as resources_handler
 
 # Настройка логирования
@@ -27,6 +28,7 @@ async def main():
         dp.include_router(start.router)
         dp.include_router(profile.router)
         dp.include_router(economy.router)
+        dp.include_router(pve.router)
         dp.include_router(resources_handler.router)
         
         logger.info("Запуск бота...")
