@@ -4,7 +4,7 @@ def main_menu_keyboard():
     return ReplyKeyboardMarkup(
         keyboard=[
             [KeyboardButton(text="👤 Профиль")],
-            [KeyboardButton(text="🛒 Рынок")]
+            [KeyboardButton(text="⚔️ Бои"), KeyboardButton(text="🛒 Рынок")]
         ],
         resize_keyboard=True
     )

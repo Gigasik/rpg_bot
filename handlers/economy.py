@@ -3,6 +3,7 @@ from aiogram.types import Message, CallbackQuery
 from database.queries import get_market_items, buy_item
 from keyboards.market import market_keyboard
 from database.base import async_session
+from aiogram.exceptions import TelegramBadRequest
 
 router = Router()
 
@@ -36,23 +37,23 @@ async def buy_callback(callback: CallbackQuery):
     async with async_session() as session:
         items = await get_market_items(session)
     
-    # Проверяем, нужно ли обновлять клавиатуру
+    # Проверяем, изменилась ли клавиатура
     try:
-        # Сначала получаем текущую клавиатуру
-        current_markup = callback.message.reply_markup
-        
-        # Создаем новую клавиатуру
         new_markup = market_keyboard(items)
         
-        # Сравниваем клавиатуры
-        if str(current_markup) != str(new_markup):
+        # Если текущая клавиатура существует и отличается от новой
+        if callback.message.reply_markup and str(callback.message.reply_markup) != str(new_markup):
             await callback.message.edit_reply_markup(
                 reply_markup=new_markup
             )
-    except Exception as e:
-        # Если сообщение не может быть изменено
-        await callback.message.answer(
-            "🛒 <b>Рынок</b>\nВыберите товар для покупки:",
-            reply_markup=market_keyboard(items),
-            parse_mode="HTML"
-        )
+    except TelegramBadRequest as e:
+        if "message is not modified" in str(e):
+            # Клавиатура не изменилась, не нужно обновлять
+            pass
+        else:
+            # Другие ошибки
+            await callback.message.answer(
+                "🛒 <b>Рынок</b>\nВыберите товар для покупки:",
+                reply_markup=market_keyboard(items),
+                parse_mode="HTML"
+            )
